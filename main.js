@@ -13,7 +13,7 @@ class Drawable{//would work well as a factory
 }
 
 class World{
-  constructor(world, width, length, playerPos){
+  constructor(world, width, length, scaling){
     this.map = world;
     this.rowSize = width;
     this.numRows = length;
@@ -40,10 +40,10 @@ class World{
         
         if(y<this.numRows-1 && this.map[ii+this.rowSize]!=1){ // Front face: South
           m.shadeAttribs.vertexPositionBuffer = m.shadeAttribs.vertexPositionBuffer.concat([
-            xx-1.0, zz-1.0, yy+1.0,
-            xx+1.0, zz-1.0, yy+1.0,
-            xx+1.0, zz+1.0, yy+1.0,
-            xx-1.0, zz+1.0, yy+1.0
+            xx-1, zz-1, yy+1,
+            xx+1, zz-1, yy+1,
+            xx+1, zz+1, yy+1,
+            xx-1, zz+1, yy+1
           ]);
           m.shadeAttribs.vertexTextureCoordBuffer = m.shadeAttribs.vertexTextureCoordBuffer.concat([
             0.0, 0.0,
@@ -66,10 +66,10 @@ class World{
         if(y>0 && this.map[ii-this.rowSize]!=1){
           m.shadeAttribs.vertexPositionBuffer = m.shadeAttribs.vertexPositionBuffer.concat([
             // Back face: North
-            xx-1.0, zz-1.0, yy-1.0,
-            xx-1.0, zz+1.0, yy-1.0,
-            xx+1.0, zz+1.0, yy-1.0,
-            xx+1.0, zz-1.0, yy-1.0
+            xx-1, zz-1, yy-1,
+            xx-1, zz+1, yy-1,
+            xx+1, zz+1, yy-1,
+            xx+1, zz-1, yy-1
           ]);
           m.shadeAttribs.vertexTextureCoordBuffer = m.shadeAttribs.vertexTextureCoordBuffer.concat([
             // Back face
@@ -94,10 +94,10 @@ class World{
         if(z>0 && this.map[ii-this.rowSize*this.numRows]!=1){
           m.shadeAttribs.vertexPositionBuffer = m.shadeAttribs.vertexPositionBuffer.concat([
             // Bottom face: Down
-            xx-1.0, zz-1.0, yy-1.0,
-            xx+1.0, zz-1.0, yy-1.0,
-            xx+1.0, zz-1.0, yy+1.0,
-            xx-1.0, zz-1.0, yy+1.0
+            xx-1, zz-1, yy-1,
+            xx+1, zz-1, yy-1,
+            xx+1, zz-1, yy+1,
+            xx-1, zz-1, yy+1
           ]);
           m.shadeAttribs.vertexTextureCoordBuffer = m.shadeAttribs.vertexTextureCoordBuffer.concat([
             // Bottom face
@@ -121,10 +121,10 @@ class World{
         if(z<this.numFloors - 1 && this.map[ii+this.rowSize*this.numRows]!=1){
           m.shadeAttribs.vertexPositionBuffer = m.shadeAttribs.vertexPositionBuffer.concat([
             // Top face: Up
-            xx-1.0,  zz+1.0, yy-1.0,
-            xx-1.0,  zz+1.0, yy+1.0,
-            xx+1.0,  zz+1.0, yy+1.0,
-            xx+1.0,  zz+1.0, yy-1.0
+            xx-1,  zz+1, yy-1,
+            xx-1,  zz+1, yy+1,
+            xx+1,  zz+1, yy+1,
+            xx+1,  zz+1, yy-1
           ]);
 
           m.shadeAttribs.vertexTextureCoordBuffer = m.shadeAttribs.vertexTextureCoordBuffer.concat([
@@ -150,10 +150,10 @@ class World{
         if(x<this.rowSize-1 && this.map[ii+1]!=1){
           m.shadeAttribs.vertexPositionBuffer = m.shadeAttribs.vertexPositionBuffer.concat([ 
           // Right face: East
-           xx+1.0, zz-1.0, yy-1.0,
-           xx+1.0, zz+1.0, yy-1.0,
-           xx+1.0, zz+1.0, yy+1.0,
-           xx+1.0, zz-1.0, yy+1.0
+           xx+1, zz-1, yy-1,
+           xx+1, zz+1, yy-1,
+           xx+1, zz+1, yy+1,
+           xx+1, zz-1, yy+1
           ]);
           m.shadeAttribs.vertexTextureCoordBuffer = m.shadeAttribs.vertexTextureCoordBuffer.concat([
             // Right face
@@ -177,10 +177,10 @@ class World{
         if(x>0 && this.map[ii-1]!=1){
           m.shadeAttribs.vertexPositionBuffer = m.shadeAttribs.vertexPositionBuffer.concat([
             // Left face: West
-            xx-1.0, zz-1.0, yy-1.0,
-            xx-1.0, zz-1.0, yy+1.0,
-            xx-1.0, zz+1.0, yy+1.0,
-            xx-1.0, zz+1.0, yy-1.0
+            xx-1, zz-1, yy-1,
+            xx-1, zz-1, yy+1,
+            xx-1, zz+1, yy+1,
+            xx-1, zz+1, yy-1
           ]);
           m.shadeAttribs.vertexTextureCoordBuffer = m.shadeAttribs.vertexTextureCoordBuffer.concat([
             // Left face
@@ -321,22 +321,50 @@ function mvPopMatrix() {
 
 function initBuffers() {
   drawings.push(new World([
-    1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
     
-    1,1,1,1,1,1,1,
-    1,1,0,0,0,1,1,
-    1,0,0,0,0,0,1,
-    1,0,0,0,0,0,1,
-    1,0,0,0,0,0,1,
-    1,1,0,0,0,1,1,
-    1,1,1,1,1,1,1
-  ], 7, 7).genStructure());
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,0,0,0,0,0,0,0,0,0,0,1,1,
+    1,0,0,0,0,0,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,1,1,0,0,0,0,0,1,
+    1,0,0,0,0,0,1,1,0,0,0,0,0,1,
+    1,0,0,0,0,0,1,1,0,0,0,0,0,1,
+    1,0,0,0,0,0,1,1,0,0,0,0,0,1,
+    1,1,0,0,0,1,1,1,1,0,0,0,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,0,0,0,1,1,1,1,0,0,0,1,1,
+    1,1,0,0,0,0,0,0,0,0,0,0,1,1,
+    1,1,0,0,0,1,1,1,1,0,0,0,1,1,
+    1,1,0,0,0,1,1,1,1,0,0,0,1,1,
+    1,1,0,0,0,1,1,1,1,0,0,0,1,1,
+    1,1,0,0,0,1,1,1,1,0,0,0,1,1,
+    1,1,0,0,0,1,1,1,1,0,0,0,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1
+  ], 14, 10, 1).genStructure());
   
   for(var ii=0; ii<drawings.length; ii++){
     gl.bindBuffer(gl.ARRAY_BUFFER, drawings[ii].shadeObjs.vertexPositionBuffer);
@@ -365,7 +393,7 @@ function initBuffers() {
 var thetaX = 0;
 var thetaY = 0;
 var thetaZ = 0;
-worldShift = [0,0,0];
+worldShift = [0,-2,0];
 function drawScene() {
   gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -386,7 +414,7 @@ function drawScene() {
 
     gl.uniform3f(
       shaderProgram.ambientColorUniform, 
-      0.8, 0.8, 0.75
+      0.9, 0.9, 0.9
     );
     var adjustedLD = vec3.create();
     vec3.normalize([1, 0, 1], adjustedLD);
@@ -394,7 +422,7 @@ function drawScene() {
     gl.uniform3fv(shaderProgram.lightingDirectionUniform, adjustedLD);
     gl.uniform3f(
       shaderProgram.directionalColorUniform,
-      0.6, 0.5, 0.1
+      -0.05, -0.05, -0.05
     );
 
     mat4.rotate(mvMatrix, drawings[ii].rotation[0], [1, 0, 0]);
